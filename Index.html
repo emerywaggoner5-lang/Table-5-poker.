@@ -1,0 +1,50 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Table Five Poker</title>
+<style>
+body{margin:0;background:#06452e;color:white;font-family:Arial;text-align:center}
+h1{color:#ffda70}
+.table{margin:20px auto;background:#08734a;border:12px solid #63391f;border-radius:45%;padding:30px 10px;max-width:600px;min-height:300px}
+.players{display:flex;justify-content:space-around;flex-wrap:wrap;gap:12px}
+.player{background:#075137;border:1px solid #78c6a3;border-radius:12px;padding:12px;min-width:90px}
+.cards{font-size:28px;background:white;color:#222;border-radius:7px;padding:8px;margin:5px}
+button{padding:12px 16px;margin:5px;border:0;border-radius:9px;font-weight:bold;background:#ffda70;color:#222}
+.chip{display:inline-block;border:4px dashed white;border-radius:50%;width:38px;height:38px;line-height:38px;margin:4px;font-weight:bold}
+#status{font-size:18px;margin:15px}
+</style>
+</head>
+<body>
+<h1>♠ TABLE FIVE POKER ♥</h1>
+<p>Five seats · Virtual chips · Texas Hold'em</p>
+<div class="table">
+<div id="community">Community cards appear here</div>
+<hr>
+<div class="players" id="players"></div>
+</div>
+<div id="status">Welcome! Start a new hand.</div>
+<div>
+<button onclick="newHand()">Deal New Hand</button>
+<button onclick="act('Fold')">Fold</button>
+<button onclick="act('Check / Call')">Check / Call</button>
+<button onclick="act('Raise 20')">Raise 20</button>
+</div>
+<p>YOUR CHIPS: <span id="bank">1000</span></p>
+<div><span class="chip" style="background:#c33">5</span><span class="chip" style="background:#2679db">10</span><span class="chip" style="background:#292929">25</span><span class="chip" style="background:#e6b92d">100</span></div>
+<script>
+let bank=1000,hand=0;
+const suits=['♠','♥','♦','♣'],ranks=['2','3','4','5','6','7','8','9','10','J','Q','K','A'];
+function deck(){let d=[];for(let s of suits)for(let r of ranks)d.push(r+s);return d.sort(()=>Math.random()-.5)}
+function newHand(){
+let d=deck();hand++;document.getElementById('community').innerHTML='🂠 Community cards: '+d.splice(0,3).map(c=>'<span class="cards">'+c+'</span>').join('');
+document.getElementById('players').innerHTML=Array.from({length:5},(_,i)=>'<div class="player">'+(i===0?'YOU':'PLAYER '+(i+1))+'<div class="cards">'+d.splice(0,2).join(' ')+'</div><div>🪙 '+(i===0?bank:1000)+'</div></div>').join('');
+document.getElementById('status').textContent='Hand '+hand+' dealt! Cards are for demonstration.';
+}
+function act(a){if(!hand){document.getElementById('status').textContent='Tap Deal New Hand first.';return}if(a==='Raise 20'){if(bank<20){document.getElementById('status').textContent='Not enough chips!';return}bank-=20;document.getElementById('bank').textContent=bank}document.getElementById('status').textContent='You selected: '+a+'. This demo does not yet calculate winners.'}
+newHand();
+</script>
+</body>
+</html>
